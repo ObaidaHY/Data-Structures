@@ -212,35 +212,42 @@ class AVLTreeList(object):
             self._min = to_insert
             self._max = to_insert
             return 1
-        
-        #insertion
-        pred = AVLTreeList.select(self,self.root,i)
-        if not AVLNode.isRealNode(pred.getRight()):
-            pred.setRight(to_insert)
-            to_insert.setParent(pred)
-        else:
-            succ = AVLTreeList.successor(self,pred)
+
+        if (i==0):
+            succ=self._min 
             succ.setLeft(to_insert)
             to_insert.setParent(succ)
-        if i == 0:
             self._min = to_insert
-        if i + 1 == self.length():
+        elif i == self.length():
+            pred = self._max
+            pred.setRight(to_insert)
+            to_insert.setParent(pred)
             self._max = to_insert
-        tmpParent = to_insert.getParent()
 
+        #insertion
+        else:
+            pred = AVLTreeList.select(self,self.root,i)
+            if not AVLNode.isRealNode(pred.getRight()):
+                pred.setRight(to_insert)
+                to_insert.setParent(pred)
+            else:
+                succ = AVLTreeList.successor(self,pred)
+                succ.setLeft(to_insert)
+                to_insert.setParent(succ)
+        #rotations and updates    
+        tmpParent = to_insert.getParent()
         count = 0
         yet = True
         while(tmpParent):
-            tmpParent.setSize(AVLNode.getSize(tmpParent.getLeft()) + AVLNode.getSize(tmpParent.getLeft())+1)
+            tmpParent.setSize(AVLNode.getSize(tmpParent.getLeft()) + AVLNode.getSize(tmpParent.getRight())+1) 
             if yet:
                 prev_height = tmpParent.getHeight()
-                tmpParent.setHeight(max(AVLNode.getHeight(tmpParent.getLeft()),AVLNode.getHeight(tmpParent.getLeft()))+1)
+                tmpParent.setHeight(max(AVLNode.getHeight(tmpParent.getLeft()),AVLNode.getHeight(tmpParent.getRight()))+1)
                 changed = not (prev_height == tmpParent.getHeight())
                 if changed:
                     count += 1
             
                 bf = abs(tmpParent.BF()) 
-
 
                 if bf < 2 and not changed:
                     yet = False
@@ -366,8 +373,6 @@ class AVLTreeList(object):
     #helper functions 
 
     def select(self,node,i):#  returns a node , we send a sub-tree and an index as an input
-        if i == 0:#just when inserting somthing before the self._min (used in insertion , when inserting something at index 0)
-           return self._min 
         rank = node.getLeft().getSize() + 1
         while rank != i:
             if rank > i:
@@ -425,7 +430,8 @@ class AVLTreeList(object):
         AVLNode.setHeight(father,max(AVLNode.getHeight(AVLNode.getLeft(father)),AVLNode.getHeight(AVLNode.getRight(father)))+1)
         son.setSize(criminal.getSize())
         criminal.setSize(AVLNode.getSize(AVLNode.getLeft(criminal))+AVLNode.getSize(AVLNode.getRight(criminal))+1)
-        self.root = son
+        if f_root:
+            self.root = son
 
 
     def rotation(self,criminal):
@@ -433,25 +439,25 @@ class AVLTreeList(object):
         if bf == 2:
             son_bf = criminal.getLeft().BF()
             if son_bf == 1:
-                rotate(self,criminal,True)
+                AVLTreeList.rotate(self,criminal,True)
                 return 1
             if son_bf == -1:
-                rotate(self,criminal.getLeft(),False)
-                rotate(self,criminal,True)
+                AVLTreeList.rotate(self,criminal.getLeft(),False)
+                AVLTreeList.rotate(self,criminal,True)
                 return 2
                 
         elif bf == -2:
             son_bf = criminal.getRight().BF()
             if son_bf == -1:
-                rotate(self,criminal,False)
+                AVLTreeList.rotate(self,criminal,False)
                 return 1
             if son_bf == 1:
-                rotate(self,criminal.getRight(),True)
-                rotate(self,criminal,False)
+                AVLTreeList.rotate(self,criminal.getRight(),True)
+                AVLTreeList.rotate(self,criminal,False)
                 return 2
             
         
-    
+       
         
 def test():
     '''t = AVLTreeList()
@@ -532,16 +538,27 @@ def test():
     print(str(b.getParent() == a) + " check b's parent")
     print(str(d.getRight() == a) + " b's parent is now a's")'''
     
+    
 
     t = AVLTreeList()
+
+
     t.insert(0,"a")
     t.insert(1,"b")
     t.insert(2,"c")
-    print(t.root.getSize())
-    print(t.root.getLeft().getSize())
-    print(t.root.getRight().getSize())
+    t.insert(3,"d")
+    t.insert(4,"e")
+    t.insert(5,"f")
+    print("size of root=  "+str(t.root.getSize()))
+    print("size of left=  "+str(t.root.getLeft().getSize()))
+    print("size of right=  "+str(t.root.getRight().getSize()))
+    print(t.root.getHeight())
+    print(t.root.getLeft().getHeight())
+    print(t.root.getRight().getHeight())
+
+    print(t.listToArray())
     print(t.root.getValue())
-    
+    print(t.root.getRight().getValue())
     
     
             
