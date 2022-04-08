@@ -544,12 +544,60 @@ def test():
 
 
     t.insert(0,"a")
+    print("after inserting first \n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t.root)
+    print("\n")
+    print("\n")
+    print("\n")
     t.insert(1,"b")
+    print("after inserting second \n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t.root)
+    print("\n")
+    print("\n")
+    print("\n")
     t.insert(2,"c")
+    print("after inserting third \n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t.root)
+    print("\n")
+    print("\n")
+    print("\n")
     t.insert(3,"d")
+    print("after inserting fourth \n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t.root)
+    print("\n")
+    print("\n")
+    print("\n")
     t.insert(4,"e")
+    print("after inserting fifth \n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t.root)
+    print("\n")
+    print("\n")
+    print("\n")
     t.insert(5,"f")
-    print("size of root=  "+str(t.root.getSize()))
+    print("after inserting sixth \n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t.root)
+    print("\n")
+    print("\n")
+    print("\n")
+    '''print("size of root=  "+str(t.root.getSize()))
     print("size of left=  "+str(t.root.getLeft().getSize()))
     print("size of right=  "+str(t.root.getRight().getSize()))
     print(t.root.getHeight())
@@ -559,9 +607,38 @@ def test():
     print(t.listToArray())
     print(t.root.getValue())
     print(t.root.getRight().getValue())
+    print2D(t.root)'''
     
     
-            
+COUNT = [10]    
+def print2DUtil(root, space) :
+ 
+    # Base case
+    if (root == None) :
+        return
+ 
+    # Increase distance between levels
+    space += COUNT[0]
+ 
+    # Process right child first
+    print2DUtil(root.right, space)
+ 
+    # Print current node after space
+    # count
+    print()
+    for i in range(COUNT[0], space):
+        print(end = " ")
+    print(root.value)
+ 
+    # Process left child
+    print2DUtil(root.left, space)
+ 
+# Wrapper over print2DUtil()
+def print2D(root) :
+     
+    # space=[0]
+    # Pass initial space count as 0
+    print2DUtil(root, 0)    
 
 
 
