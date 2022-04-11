@@ -319,7 +319,7 @@ class AVLTreeList(object):
     def first(self):
         if not self:
             return self
-        return None if empty(self) else AVLNode.getValue(self._min)
+        return None if AVLTreeList.empty(self) else AVLNode.getValue(self._min)
 
     """returns the value of the last item in the list
 
@@ -329,7 +329,7 @@ class AVLTreeList(object):
     def last(self):
         if not self:
             return self
-        return None if empty(self) else AVLNode.getValue(self._max)
+        return None if AVLTreeList.empty(self) else AVLNode.getValue(self._max)
 
     """returns an array representing list 
 
@@ -629,7 +629,7 @@ def test():
     print("\n")
     print("\n")
     print("\n")
-    '''t.insert(3,"d")
+    t.insert(3,"d")
     print("after inserting fourth \n")
     print("\n")
     print("\n")
@@ -655,14 +655,32 @@ def test():
     print2D(t.root)
     print("\n")
     print("\n")
-    print("\n")'''
+    print("\n")
 
     '''t.delete(1)
     print2D(t.root)'''
 
-    t.insert(2,'f')
+    t.insert(2,'r')
+    print("after inserting seventh \n")
+    print("\n")
+    print("\n")
+    print("\n")
     print2D(t.root)
-    
+    print("\n")
+    print("\n")
+    print("\n")
+    t.insert(5,'z')
+    print("after inserting eighth \n")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t.root)
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t.listToArray())
+    print(t.first())
+    print(t.last())
     '''print("size of root=  "+str(t.root.getSize()))
     print("size of left=  "+str(t.root.getLeft().getSize()))
     print("size of right=  "+str(t.root.getRight().getSize()))
