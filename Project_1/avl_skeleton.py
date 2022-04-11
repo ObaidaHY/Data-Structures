@@ -426,28 +426,20 @@ class AVLTreeList(object):
 
     
 
-    def Min(self,node):
+    def MinMax(self,node,key):
         if not node:
             return "check yourself-Min"
-        left = AVLNode.getLeft(node)
-        while AVLNode.getHeight(left) != -1:
-            node = left
-            left = AVLNode.getLeft(node)
+        nxt = key(node)
+        while AVLNode.getHeight(nxt) != -1:
+            node = nxt
+            nxt = key(node)
         return node
 
-    def Max(self,node):
-        if not node:
-            return "check yourself-Max"
-        right = AVLNode.getRight(node)
-        while AVLNode.getHeight(right) != -1:
-            node = right
-            right = AVLNode.getRight(node)
-        return node
 
     def successor(self,node):
         right = AVLNode.getRight(node)
         if AVLNode.getHeight(right) != -1:
-            return AVLTreeList.Min(self,right)
+            return AVLTreeList.MinMax(self,right,lambda x : AVLNode.getLeft(x))
         y = node.getParent()
         while y and node == AVLNode.getRight(y):
             node = y
@@ -457,7 +449,7 @@ class AVLTreeList(object):
     def predecessor(self,node):
         left = AVLNode.getLeft(node)
         if AVLNode.getHeight(left) != -1:
-            return AVLTreeList.Max(self,left)
+            return AVLTreeList.MinMax(self,left,lambda x : AVLNode.getRight(x))
         y = node.getParent()
         while y and node == AVLNode.getLeft(y):
             node = y
@@ -657,9 +649,6 @@ def test():
     print("\n")
     print("\n")
 
-    '''t.delete(1)
-    print2D(t.root)'''
-
     t.insert(2,'r')
     print("after inserting seventh \n")
     print("\n")
@@ -692,6 +681,36 @@ def test():
     print(t.root.getValue())
     print(t.root.getRight().getValue())
     print2D(t.root)'''
+
+
+    '''b = AVLTreeList()
+    b.getRoot()
+    b.insert(0, "a")
+    b.insert(1, "b")
+    b.insert(0, "c")
+    b.insert(3, "d")
+    b.insert(0, "e")
+    b.insert(4, "p")
+    b.insert(0, "k")
+    print(b.insert(0, "l"))
+    print(b.insert(4, "h"))
+    print(b.insert(3, "o"))
+    print(b.insert(3, "w"))
+    print(b.insert(0, "q"))
+    print(b.insert(0, "u"))
+    print(b.insert(0, "m"))
+    #print(b.delete(0))
+
+    print(b.retrieve(0))
+    print2D(b.getRoot())
+    print(b.listToArray())'''
+
+
+
+
+
+
+    
     
     
 COUNT = [10]    
