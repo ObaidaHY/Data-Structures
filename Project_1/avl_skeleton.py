@@ -211,29 +211,26 @@ class AVLTreeList(object):
             self.root = to_insert
             self._min = to_insert
             self._max = to_insert
-            return 1
+            return 0   ####
 
-        if (i==0):
-            succ=self._min 
-            succ.setLeft(to_insert)
-            to_insert.setParent(succ)
-            self._min = to_insert
-        elif i == self.length():
-            pred = self._max
-            pred.setRight(to_insert)
-            to_insert.setParent(pred)
+        if i == self.length():
+            self._max.setRight(to_insert)
+            to_insert.setParent(self._max)
             self._max = to_insert
-
-        #insertion
+        
         else:
-            pred = AVLTreeList.select(self,self.root,i)
-            if not AVLNode.isRealNode(pred.getRight()):
-                pred.setRight(to_insert)
-                to_insert.setParent(pred)
-            else:
-                succ = AVLTreeList.successor(self,pred)
+            succ = AVLTreeList.select(self,self.root,i+1)
+            if not AVLNode.isRealNode(succ.getLeft()):
                 succ.setLeft(to_insert)
                 to_insert.setParent(succ)
+            else:
+                pre = AVLTreeList.predecessor(self,succ)
+                pre.setLeft(to_insert)
+                to_insert.setParent(pre)
+        if i == 0:
+            self._min = to_insert
+
+        
         #rotations and updates    
         tmpParent = to_insert.getParent()
         count = 0
@@ -268,7 +265,50 @@ class AVLTreeList(object):
     @returns: the number of rebalancing operation due to AVL rebalancing
     """
     def delete(self, i):
-        return -1
+
+        if i == 0 and i == self.length():
+            self.root = None
+            self._min = None
+            self._max = None
+            return 0
+        if i == 0:
+            self._min = self.successor(self._min)
+        tmpParent = None
+        if i < self.length() - 1:
+            to_delete = self.select(self.root,i+1)
+            succ = self.successor(to_delete)
+            tmpParent = succ.getParent()
+            AVLNode.setLeft(tmpParent,succ.getRight())
+            AVLNode.setParent(succ.getRight(),succ.getParent())
+            succ.setRight(to_delete.getRight())
+            succ.setLeft(to_delete.getLeft())
+            succ.setHeight(to_delete.getHeight())
+            succ.setSize(to_delete.getSize())
+            succ.getLeft().setParent(succ)
+            succ.getRight().setParent(succ)
+        else:
+            self._max = self.select(self.root,i-1)
+            self._max.setRight(AVLNode(None))
+            self._max.getRight().setParent(self._max)
+            tmpParent = self._max
+
+
+        count = 0
+        while tmpParent:
+            AVLNode.setSize(tmpParent,AVLNode.getSize(AVLNode.getLeft(tmpParent)) + AVLNode.getSize(AVLNode.getRight(tmpParent))+1)
+            prev = tmpParent.getHeight
+            AVLNode.setHeight(tmpParent,max(AVLNode.getLeft(succ.getParent()),AVLNode.getRight(succ.getParent()))+1)
+            changed = prev == tmpParent.getHeight()
+            if changed:
+                count += 1
+            bf = abs(tmpParent.BF())
+            if bf == 2:
+                count += self.rotation(tmpParent)
+            tmpParent = tmpParent.getParent()
+            
+            
+
+        return count
 
 
     """returns the value of the first item in the list
@@ -390,9 +430,18 @@ class AVLTreeList(object):
         if not node:
             return "check yourself-Min"
         left = AVLNode.getLeft(node)
-        while left.getHeight() != -1:
+        while AVLNode.getHeight(left) != -1:
             node = left
-            left = node.getLeft()
+            left = AVLNode.getLeft(node)
+        return node
+
+    def Max(self,node):
+        if not node:
+            return "check yourself-Max"
+        right = AVLNode.getRight(node)
+        while AVLNode.getHeight(right) != -1:
+            node = right
+            right = AVLNode.getRight(node)
         return node
 
     def successor(self,node):
@@ -401,6 +450,16 @@ class AVLTreeList(object):
             return AVLTreeList.Min(self,right)
         y = node.getParent()
         while y and node == AVLNode.getRight(y):
+            node = y
+            y = node.getParent()
+        return y
+
+    def predecessor(self,node):
+        left = AVLNode.getLeft(node)
+        if AVLNode.getHeight(left) != -1:
+            return AVLTreeList.Max(self,left)
+        y = node.getParent()
+        while y and node == AVLNode.getLeft(y):
             node = y
             y = node.getParent()
         return y
@@ -438,7 +497,7 @@ class AVLTreeList(object):
         bf = criminal.BF()
         if bf == 2:
             son_bf = criminal.getLeft().BF()
-            if son_bf == 1:
+            if son_bf >= 0:
                 AVLTreeList.rotate(self,criminal,True)
                 return 1
             if son_bf == -1:
@@ -448,7 +507,7 @@ class AVLTreeList(object):
                 
         elif bf == -2:
             son_bf = criminal.getRight().BF()
-            if son_bf == -1:
+            if son_bf <= 0:
                 AVLTreeList.rotate(self,criminal,False)
                 return 1
             if son_bf == 1:
@@ -570,7 +629,7 @@ def test():
     print("\n")
     print("\n")
     print("\n")
-    t.insert(3,"d")
+    '''t.insert(3,"d")
     print("after inserting fourth \n")
     print("\n")
     print("\n")
@@ -596,7 +655,14 @@ def test():
     print2D(t.root)
     print("\n")
     print("\n")
-    print("\n")
+    print("\n")'''
+
+    '''t.delete(1)
+    print2D(t.root)'''
+
+    t.insert(2,'f')
+    print2D(t.root)
+    
     '''print("size of root=  "+str(t.root.getSize()))
     print("size of left=  "+str(t.root.getLeft().getSize()))
     print("size of right=  "+str(t.root.getRight().getSize()))
