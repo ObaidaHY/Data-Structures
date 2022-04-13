@@ -171,7 +171,7 @@ class AVLTreeList(object):
     @returns: True if the list is empty, False otherwise
     """
     def empty(self):
-        return AVLNode.getHeight(self.root) == -1  #check one more time the definition of an empty tree
+        return AVLNode.getHeight(AVLTreeList.getRoot(self)) == -1  #check one more time the definition of an empty tree
         #I think the definition is implementor's decision
 
     """retrieves the value of the i'th item in the list
@@ -250,6 +250,8 @@ class AVLTreeList(object):
                     yet = False'''
                 if bf == 2:
                     count += self.rotation(tmpParent)
+                    if changed:
+                        count -= 1
                     yet = False
             tmpParent = tmpParent.getParent()
                     
@@ -334,6 +336,8 @@ class AVLTreeList(object):
                     yet = False'''
                 if bf == 2:
                     count += self.rotation(tmpParent)
+                    if changed:
+                        count -= 1
             tmpParent = tmpParent.getParent()
 
         return count
@@ -395,6 +399,8 @@ class AVLTreeList(object):
     right is an AVLTreeList representing the list from index i+1, and val is the value at the i'th index.
     """
     def split(self, i):
+        to_split = self.select(self.root,i+1)
+        
         return None
 
     """concatenates lst to self
@@ -405,7 +411,20 @@ class AVLTreeList(object):
     @returns: the absolute value of the difference between the height of the AVL trees joined
     """
     def concat(self, lst):
-        return None
+
+        self_height ,lst_height = AVLNode.getHeight(AVLTreeList.getRoot(self)) ,AVLNode.getHeight(AVLTreeList.getRoot(lst))
+        if AVLTreeList.empty(lst):
+            return abs(self_height - lst_height)
+        if AVLTreeList.empty(self):
+            self.root = lst.root 
+            self._max = lst._max
+            self._min = lst._min
+            return abs(self_height - lst_height)
+        x = self._max
+        self.delete(self.length()-1)
+        self._max = lst._max
+        self.root = self.join(AVLTreeList.getRoot(self),x,AVLTreeList.getRoot(lst))
+        return abs(self_height - lst_height)
 
     """searches for a *value* in the list
 
@@ -515,9 +534,9 @@ class AVLTreeList(object):
 
 
     def rotation(self,criminal):
-        bf = criminal.BF()
+        bf = AVLNode.BF(criminal)
         if bf == 2:
-            son_bf = criminal.getLeft().BF()
+            son_bf = AVLNode.BF(AVLNode.getLeft(criminal))
             if son_bf >= 0:
                 AVLTreeList.rotate(self,criminal,True)
                 return 1
@@ -527,7 +546,7 @@ class AVLTreeList(object):
                 return 2
                 
         elif bf == -2:
-            son_bf = criminal.getRight().BF()
+            son_bf = AVLNode.BF(AVLNode.getRight(criminal))
             if son_bf <= 0:
                 AVLTreeList.rotate(self,criminal,False)
                 return 1
@@ -535,6 +554,52 @@ class AVLTreeList(object):
                 AVLTreeList.rotate(self,criminal.getRight(),True)
                 AVLTreeList.rotate(self,criminal,False)
                 return 2
+
+
+    def join(self,node1,x,node2):
+        if not node1:
+            node1 = AVLNode(None)
+        if not node2:
+            node2 = AVLNode(None)
+        if AVLNode.getHeight(node1) < AVLNode.getHeight(node2):
+            tmp = node2
+            while AVLNode.getHeight(tmp) > AVLNode.getHeight(node1):
+                tmp = AVLNode.getLeft(tmp)
+            x.setLeft(node1)
+            x.setRight(tmp)
+            x.setHeight(max(AVLNode.getHeight(tmp),AVLNode.getHeight(node1))+1)
+            x.setSize(AVLNode.getSize(tmp) + AVLNode.getHeight(node1) + 1)
+            x.setParent(AVLNode.getParent(tmp))
+            AVLNode.setLeft(AVLNode.getParent(tmp),x)
+            AVLNode.setParent(tmp,x)
+            AVLNode.setParent(node1,x)
+        else:
+            tmp = node1
+            while AVLNode.getHeight(tmp) > AVLNode.getHeight(node2):
+                tmp = AVLNode.getRight(tmp)
+            x.setLeft(tmp)
+            x.setRight(node2)
+            x.setHeight(max(AVLNode.getHeight(tmp),AVLNode.getHeight(node2))+1)
+            x.setSize(AVLNode.getSize(tmp) + AVLNode.getHeight(node2) + 1)
+            x.setParent(AVLNode.getParent(tmp))
+            AVLNode.setRight(AVLNode.getParent(tmp),x)
+            AVLNode.setParent(tmp,x)
+            AVLNode.setParent(node2,x)
+        tmpParent = x
+        root = tmpParent
+        while tmpParent:
+            AVLNode.setSize(tmpParent,AVLNode.getSize(AVLNode.getLeft(tmpParent)) + AVLNode.getSize(AVLNode.getRight(tmpParent))+1)
+            AVLNode.setHeight(tmpParent,max(AVLNode.getHeight(AVLNode.getLeft(tmpParent)),AVLNode.getHeight(AVLNode.getRight(tmpParent)))+1)
+            bf = abs(AVLNode.BF(tmpParent)) 
+            if bf == 2:
+                self.rotation(tmpParent)
+            root = tmpParent
+            tmpParent = AVLNode.getParent(tmpParent)
+            
+        return root
+        
+            
+
             
         
        
@@ -714,9 +779,9 @@ def test():
     print2D(t.root)
     print("\n")
     print("\n")
-    print("\n")'''
+    print("\n")
 
-    '''t.delete(3)
+    t.delete(3)
     print("after deleting index 3 \n")
     print("\n")
     print("\n")
@@ -735,7 +800,7 @@ def test():
     print("\n")
     print("\n")
     print("\n")'''
-    t = AVLTreeList()
+    '''t = AVLTreeList()
     
     
     
@@ -769,12 +834,45 @@ def test():
     
     print("\n")
     print("\n")
-    print("\n")
+    print("\n")'''
 
     '''t.insert(0,'a')
     t.insert(1,'b')
     print(t.insert(2,'c'))
     print(t.delete(2))'''
+
+
+    t1 = AVLTreeList()
+    t2= AVLTreeList()
+    '''t1.insert(0,"y")
+    t1.insert(1,"x")
+    t1.insert(2,"z")
+    t1.insert(2,"w")
+    t1.insert(4,'m')'''
+
+    t2.insert(0,"b")
+    t2.insert(1,"a")
+    t2.insert(2,"g")
+    t2.insert(2,"f")
+    t2.insert(1,'e')
+    t2.insert(0,"c")
+    t2.insert(0,'d')
+    print("t1 before concat")
+    #print2D(t1.root)
+    print("t2 before concat")
+    print2D(t2.root)
+
+    print(AVLTreeList.concat(t1,t2))
+    print("t1 after concat")
+    print(t2.root.value)
+    print(t2._min.value)
+    print(t2._max.value)
+    print2D(t1.root)
+    print("t2 after concat")
+    print2D(t2.root)
+    
+
+    
 
 
 
