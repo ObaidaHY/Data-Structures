@@ -400,8 +400,42 @@ class AVLTreeList(object):
     """
     def split(self, i):
         to_split = self.select(self.root,i+1)
+        new_min = self.successor(to_split)
+        new_max = self.predecessor(to_split)
+
+        smaller = to_split.getLeft()
+        larger = to_split.getRight()
+        tmp = to_split
+        tmpParent = to_split.getParent()
+        while tmpParent:
+            
+            if tmpParent.getRight() == tmp:
+                tmpParent.getLeft().setParent(None)
+                smaller.setParent(None)
+                nxtTmp = tmpParent.getParent()
+                smaller = self.join(tmpParent.getLeft(),tmpParent,smaller)
+                
+            else:
+                tmpParent.getRight().setParent(None)
+                nxtTmp = tmpParent.getParent()
+                larger.setParent(None)
+                larger = self.join(larger,tmpParent,tmpParent.getRight())
+            tmp = tmpParent
+            tmpParent = nxtTmp
+        t1 = AVLTreeList()
+        t1.root = smaller if AVLNode.isRealNode(smaller) else None
+        t1._min = self._min
+        t1._max = new_max
+
+        t2 = AVLTreeList()
+        t2.root = larger if AVLNode.isRealNode(larger) else None
+        t2._min = new_min
+        t2._max = self._max
         
-        return None
+            
+        
+        
+        return [t1,to_split.getValue(),t2]
 
     """concatenates lst to self
 
@@ -842,15 +876,15 @@ def test():
     print(t.delete(2))'''
 
 
-    t1 = AVLTreeList()
-    t2= AVLTreeList()
+    '''t1 = AVLTreeList()
+    t2= AVLTreeList()'''
     '''t1.insert(0,"y")
     t1.insert(1,"x")
     t1.insert(2,"z")
     t1.insert(2,"w")
     t1.insert(4,'m')'''
 
-    t2.insert(0,"b")
+    '''t2.insert(0,"b")
     t2.insert(1,"a")
     t2.insert(2,"g")
     t2.insert(2,"f")
@@ -869,7 +903,47 @@ def test():
     print(t2._max.value)
     print2D(t1.root)
     print("t2 after concat")
-    print2D(t2.root)
+    print2D(t2.root)'''
+
+    t1 = AVLTreeList()
+    '''t1.insert(0,'a')
+    t1.insert(1,'b')
+    t1.insert(0,'c')
+    print2D(t1.root)
+    lst = t1.split(2)
+    print(lst)
+    print2D(lst[0].root)
+    print2D(lst[2].root)'''
+
+    t1.insert(0,'a')
+
+    t1.insert(0,'b')
+    t1.insert(2,'e')
+    t1.insert(0,'c')
+    t1.insert(3,'f')
+    t1.insert(2,'d')
+    t1.insert(6,'g')
+    t1.insert(3,'k')
+    t1.insert(6,'l')
+    t1.insert(9,'h')
+    t1.insert(2,'m')
+    t1.insert(4,'p')
+    t1.delete(7)
+    t1.insert(2,'s')
+    t1.delete(10)
+
+
+    t2=AVLTreeList()
+    t2.insert(0,'x')
+    t2.insert(0,'y')
+    t2.insert(2,'z')
+    t2.insert(2,'w')
+    t1.concat(t2)
+    
+    left,val,right = t1.split(8)
+    print2D(left.root)
+
+    
     
 
     
