@@ -511,25 +511,48 @@ class AVLTreeList(object):
 
 #################################################################################
 
-    #helper functions 
+    #helper functions
+    
 
-    def select(self,node,i):#  returns a node , we send a sub-tree and an index as an input
+    """
+    @type i: int
+    @pre: 0 < i <= self.length()
+    @param i:  The rank of the node we want.
+    @type node: AVLNode 
+    @param node: The sub-tree. 
+    @rtype: node
+    @returns: the node with rank=i in the sub tree.
+    """
+
+    def select(self,node,i): #Time Complexity of O(logn)
+        
         rank = node.getLeft().getSize() + 1
+        
         while rank != i:
+            
             if rank > i:
                 node = node.getLeft()
                 rank = node.getLeft().getSize() + 1
+                
             elif rank < i:
                 i = i - rank
                 node = node.getRight()
                 rank = node.getLeft().getSize() + 1
+        
         return node
 
-    
+    """
+    @type node: AVLNode 
+    @param node: Sub-tree.
+    @type key: lambda function 
+    @param key: determine if return Min or Max. 
+    @rtype: AVLNode  
+    @returns: The node with the Minimal/ Maximal index in the sub_tree.
+    """
 
-    def MinMax(self,node,key):
+    def MinMax(self,node,key): #Time Complexity of O(logn)
         if not node:
-            return "check yourself-Min"
+            return None 
         nxt = key(node)
         while AVLNode.getHeight(nxt) != -1:
             node = nxt
@@ -537,7 +560,15 @@ class AVLTreeList(object):
         return node
 
 
-    def successor(self,node):
+    """
+    @type node: AVLNode 
+    @param node: Sub-tree. 
+    @rtype: AVLNode  
+    @returns: The successor of a given node.
+    """
+
+
+    def successor(self,node):   #Time Complexity of O(logn)
         right = AVLNode.getRight(node)
         if AVLNode.getHeight(right) != -1:
             return AVLTreeList.MinMax(self,right,lambda x : AVLNode.getLeft(x))
@@ -547,7 +578,15 @@ class AVLTreeList(object):
             y = node.getParent()
         return y
 
-    def predecessor(self,node):
+
+    """
+    @type node: AVLNode 
+    @param node: Sub-tree. 
+    @rtype: AVLNode  
+    @returns: The perdecessor of a given node.
+    """
+    
+    def predecessor(self,node): #Time Complexity of O(logn)
         left = AVLNode.getLeft(node)
         if AVLNode.getHeight(left) != -1:
             return AVLTreeList.MinMax(self,left,lambda x : AVLNode.getRight(x))
@@ -557,7 +596,15 @@ class AVLTreeList(object):
             y = node.getParent()
         return y
 
-    def rotate(self,criminal,is_right):
+
+    """
+    @type criminal: AVLNode 
+    @param criminal: a node with BF=2.
+    @type is_right: Boolean value
+    @param is_right: determine if right\left rotation.
+    """
+
+    def rotate(self,criminal,is_right): #Time Complexity of O(1)
         f_root = criminal == self.root
         father = criminal.getParent()
         f_left = AVLNode.getLeft(father) == criminal
@@ -585,8 +632,13 @@ class AVLTreeList(object):
         if f_root:
             self.root = son
 
-
-    def rotation(self,criminal):
+    """
+    @type criminal: AVLNode. 
+    @param criminal: a node with BF=2. 
+    @rtype: int.  
+    @returns: number of balance operations.
+    """
+    def rotation(self,criminal): #Time Complexity of O(1)
         bf = AVLNode.BF(criminal)
         if bf == 2:
             son_bf = AVLNode.BF(AVLNode.getLeft(criminal))
@@ -609,7 +661,18 @@ class AVLTreeList(object):
                 return 2
 
 
-    def join(self,node1,x,node2):
+    """
+    @type node1: AVLNode. 
+    @param node1: the first sub-tree to join 
+    @type node2:AVLNode. 
+    @param node2: the second sub-tree to join.
+    @type x: AVLNode. 
+    @param x: joining node. 
+    @rtype: AVLNode.  
+    @returns: the root of the joined trees.
+    """
+
+    def join(self,node1,x,node2): #Time Complexity of O(|height(node1)-height(node2)+1|) 
         if not node1:
             node1 = AVLNode(None)
         if not node2:
