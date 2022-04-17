@@ -322,6 +322,8 @@ class AVLTreeList(object):
                 tmpParent = succ.getParent()
                 succ.setLeft(to_delete.getLeft())
                 succ.setRight(to_delete.getRight())
+                AVLNode.setParent(to_delete.getRight(),succ)
+                AVLNode.setParent(to_delete.getLeft(),succ)
                 succ.setHeight(to_delete.getHeight())
                 succ.setSize(to_delete.getSize())
                 succ.setParent(to_delete.getParent())
@@ -1023,17 +1025,20 @@ def test():
     t1.concat(t2)
     
     left,val,right = t1.split(8)
+
     print2D(left.root)
+
+    
 
     print("\n")
     print("\n")
     print("\n")
-    print(t1.delete(4))
+    print(left.delete(4))
     print("after deleting the root 1")
     print("\n")
     print("\n")
     print("\n")
-    print2D(t1.getRoot())
+    print2D(left.getRoot())
 
     print("\n")
     print("\n")
@@ -1119,8 +1124,25 @@ def test():
 
 
 
+import random    
+def insert_delete(i):
     
-    
+    t = AVLTreeList()
+    count = 0
+    for j in range(1000*(2**i)):
+        ind = random.randint(0, t.length())
+        count  += t.insert(ind,'a')
+
+    return count
+        
+'''
+for i in range(1,11):
+    print("for i = : " + str(i))
+    print("the count is : " + str(insert_delete(i)))
+    print("\n")'''
+
+
+  
     
 COUNT = [10]    
 def print2DUtil(root, space) :
