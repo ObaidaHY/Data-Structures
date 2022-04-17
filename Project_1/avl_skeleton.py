@@ -19,8 +19,8 @@ class AVLNode(object):
         self.left = None
         self.right = None
         self.parent = None
-        self.height = -1  # remember please!!!!!
-        self.size = 0   # remember please!!!!!
+        self.height = -1  
+        self.size = 0   
         
 
     """returns the left child
@@ -28,7 +28,7 @@ class AVLNode(object):
     @returns: the left child of self, None if there is no left child
     """
     
-    def getLeft(self):
+    def getLeft(self):#time complexity of O(1)
         if not self:
                 return None
         return self.left
@@ -39,7 +39,7 @@ class AVLNode(object):
     @rtype: AVLNode
     @returns: the right child of self, None if there is no right child
     """
-    def getRight(self):
+    def getRight(self):#time complexity of O(1)
         if not self:
                 return None
         return self.right
@@ -49,7 +49,7 @@ class AVLNode(object):
     @rtype: AVLNode
     @returns: the parent of self, None if there is no parent
     """
-    def getParent(self):
+    def getParent(self):#time complexity of O(1)
         if not self:
                 return None
         return self.parent
@@ -59,7 +59,7 @@ class AVLNode(object):
     @rtype: str
     @returns: the value of self, None if the node is virtual
     """
-    def getValue(self):
+    def getValue(self):#time complexity of O(1)
         if not self:
                 return None
         return self.value
@@ -69,7 +69,7 @@ class AVLNode(object):
     @rtype: int
     @returns: the height of self, -1 if the node is virtual
     """
-    def getHeight(self):#the case when asking an empty tree for height , we will send the root as an argument , but the tree is empty iff self.root == None
+    def getHeight(self):#time complexity of O(1)
         if not self:
                 return -1
         return self.height
@@ -79,7 +79,7 @@ class AVLNode(object):
     @type node: AVLNode
     @param node: a node
     """
-    def setLeft(self, node):#always check if you can insert before insertion. and check the virtual Node
+    def setLeft(self, node):#time complexity of O(1)
         if self:
                 self.left = node
         return None
@@ -89,7 +89,7 @@ class AVLNode(object):
     @type node: AVLNode
     @param node: a node
     """
-    def setRight(self, node):
+    def setRight(self, node):#time complexity of O(1)
         if self:
                 self.right = node
         return None
@@ -99,7 +99,7 @@ class AVLNode(object):
     @type node: AVLNode
     @param node: a node
     """
-    def setParent(self, node):
+    def setParent(self, node):#time complexity of O(1)
         if self:
                 self.parent = node
         return None
@@ -109,17 +109,17 @@ class AVLNode(object):
     @type value: str
     @param value: data
     """
-    def setValue(self, value):
+    def setValue(self, value):#time complexity of O(1)
         if self:
                 self.value = value
         return None
 
-    """sets the balance factor of the node
+    """sets the Height of the node
 
     @type h: int
     @param h: the height
     """
-    def setHeight(self, h):
+    def setHeight(self, h):#time complexity of O(1)
         if self:
                 self.height = h
         return None
@@ -129,23 +129,39 @@ class AVLNode(object):
     @rtype: bool
     @returns: False if self is a virtual node, True otherwise.
     """
-    def isRealNode(self):
+    def isRealNode(self):#time complexity of O(1)
         return AVLNode.getHeight(self) != -1
 
     # help methods :
 
-    def getSize(self):
+    """returns the size of subtree
+
+    @rtype: int
+    @returns: the size of the subtree where self is the root
+    """
+    def getSize(self):#time complexity of O(1)
         if not self:
             return 0
         return self.size
     
-    def setSize(self,s):
+    """sets the Size of the node
+
+    @type s: int
+    @param s: the size of the subtree where self is the root
+    """
+    def setSize(self,s):#time complexity of O(1)
         if self:
             self.size = s
 
-    def BF(self):
+
+    """returns the balance factor
+
+    @rtype: int
+    @returns: the balance factor of the Node
+    """
+    def BF(self):#time complexity of O(1)
         if not self:
-            return 0 #"check yourself-balance"
+            return 0 
         return AVLNode.getHeight(AVLNode.getLeft(self)) - AVLNode.getHeight(AVLNode.getRight(self))
 
 
@@ -170,9 +186,8 @@ class AVLTreeList(object):
     @rtype: bool
     @returns: True if the list is empty, False otherwise
     """
-    def empty(self):
-        return AVLNode.getHeight(AVLTreeList.getRoot(self)) == -1  #check one more time the definition of an empty tree
-        #I think the definition is implementor's decision
+    def empty(self):#time complexity of O(1)
+        return AVLNode.getHeight(AVLTreeList.getRoot(self)) == -1  
 
     """retrieves the value of the i'th item in the list
 
@@ -182,7 +197,7 @@ class AVLTreeList(object):
     @rtype: str
     @returns: the the value of the i'th item in the list
     """
-    def retrieve(self, i):
+    def retrieve(self, i):#Time complexity of O(logn)
         return AVLNode.getValue(self.select(self.root,i+1))
 
     """inserts val at position i in the list
@@ -195,7 +210,7 @@ class AVLTreeList(object):
     @rtype: list
     @returns: the number of rebalancing operation due to AVL rebalancing
     """
-    def insert(self, i, val):
+    def insert(self, i, val):#Time complexity of O(logn)
 
         # set up the insertion node
         to_insert = AVLNode(val)
@@ -211,8 +226,9 @@ class AVLTreeList(object):
             self.root = to_insert
             self._min = to_insert
             self._max = to_insert
-            return 0   ####
+            return 0   
 
+        #insertion of the new Node
         if i == self.length():
             self._max.setRight(to_insert)
             to_insert.setParent(self._max)
@@ -246,8 +262,7 @@ class AVLTreeList(object):
             
                 bf = abs(tmpParent.BF()) 
 
-                '''if bf < 2 and not changed:
-                    yet = False'''
+                
                 if bf == 2:
                     count += self.rotation(tmpParent)
                     if changed:
@@ -266,18 +281,22 @@ class AVLTreeList(object):
     @rtype: int
     @returns: the number of rebalancing operation due to AVL rebalancing
     """
-    def delete(self, i):
+    def delete(self, i):#Time complexity of O(logn)
 
+        #Edge case
         if i == 0 and i == self.length()-1:
             self.root = None
             self._min = None
             self._max = None
             return 0
         
+        #finding the node to Delete
         to_delete = self.select(self.root,i+1)
         father = to_delete.getParent()
         succ = self.successor(to_delete)
         is_root = to_delete == self.root
+
+        #Deletion of the Node
         if i == 0:
             self._min = succ
         if i == self.length() - 1:
@@ -317,7 +336,7 @@ class AVLTreeList(object):
             if is_root:
                 self.root = node
             
-
+        #Updates and Rotations
         count = 0
         yet = True
         while tmpParent:
@@ -331,9 +350,6 @@ class AVLTreeList(object):
             
                 bf = abs(tmpParent.BF()) 
 
-                '''if bf < 2 and not changed:
-                    print ( "stoped her") 
-                    yet = False'''
                 if bf == 2:
                     count += self.rotation(tmpParent)
                     if changed:
@@ -349,7 +365,7 @@ class AVLTreeList(object):
     @rtype: str
     @returns: the value of the first item, None if the list is empty
     """
-    def first(self):
+    def first(self):#Time complexity of O(1)
         if not self:
             return self
         return None if AVLTreeList.empty(self) else AVLNode.getValue(self._min)
@@ -359,7 +375,7 @@ class AVLTreeList(object):
     @rtype: str
     @returns: the value of the last item, None if the list is empty
     """
-    def last(self):
+    def last(self):#Time complexity of O(1)
         if not self:
             return self
         return None if AVLTreeList.empty(self) else AVLNode.getValue(self._max)
@@ -369,7 +385,7 @@ class AVLTreeList(object):
     @rtype: list
     @returns: a list of strings representing the data structure
     """
-    def listToArray(self):
+    def listToArray(self):#Time complexity of O(n)
         res = []
         node = self._min
         while (node != None):
@@ -384,7 +400,7 @@ class AVLTreeList(object):
     @rtype: int
     @returns: the size of the list
     """
-    def length(self):
+    def length(self):#Time complexity of O(1)
         if not self:
             return 0
         return 0 if self.empty() else self.root.getSize()
@@ -398,7 +414,8 @@ class AVLTreeList(object):
     @returns: a list [left, val, right], where left is an AVLTreeList representing the list until index i-1,
     right is an AVLTreeList representing the list from index i+1, and val is the value at the i'th index.
     """
-    def split(self, i):
+    def split(self, i):#Time complexity of O(logn)
+
         to_split = self.select(self.root,i+1)
         new_min = self.successor(to_split)
         new_max = self.predecessor(to_split)
@@ -422,6 +439,7 @@ class AVLTreeList(object):
                 larger = self.join(larger,tmpParent,tmpParent.getRight())
             tmp = tmpParent
             tmpParent = nxtTmp
+
         t1 = AVLTreeList()
         t1.root = smaller if AVLNode.isRealNode(smaller) else None
         t1._min = self._min
@@ -432,9 +450,6 @@ class AVLTreeList(object):
         t2._min = new_min
         t2._max = self._max
         
-            
-        
-        
         return [t1,to_split.getValue(),t2]
 
     """concatenates lst to self
@@ -444,20 +459,24 @@ class AVLTreeList(object):
     @rtype: int
     @returns: the absolute value of the difference between the height of the AVL trees joined
     """
-    def concat(self, lst):
+    def concat(self, lst):#Time complexity of O(logn)
 
         self_height ,lst_height = AVLNode.getHeight(AVLTreeList.getRoot(self)) ,AVLNode.getHeight(AVLTreeList.getRoot(lst))
+
         if AVLTreeList.empty(lst):
             return abs(self_height - lst_height)
+
         if AVLTreeList.empty(self):
             self.root = lst.root 
             self._max = lst._max
             self._min = lst._min
             return abs(self_height - lst_height)
+
         x = self._max
         self.delete(self.length()-1)
         self._max = lst._max
         self.root = self.join(AVLTreeList.getRoot(self),x,AVLTreeList.getRoot(lst))
+
         return abs(self_height - lst_height)
 
     """searches for a *value* in the list
@@ -467,7 +486,7 @@ class AVLTreeList(object):
     @rtype: int
     @returns: the first index that contains val, -1 if not found.
     """
-    def search(self, val):
+    def search(self, val):#Time complexity of O(n)
         curr = self._min
         i = 0
         while(curr and curr.getValue() != val):
@@ -485,7 +504,7 @@ class AVLTreeList(object):
     @rtype: AVLNode
     @returns: the root, None if the list is empty
     """
-    def getRoot(self):
+    def getRoot(self):#Time complexity of O(1)
         if not self:
             return self
         return self.root
@@ -942,6 +961,91 @@ def test():
     
     left,val,right = t1.split(8)
     print2D(left.root)
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(4))
+    print("after deleting the root 1")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(4))
+    print("after deleting the root 2")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
+
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(3))
+    print("after deleting the root 3")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(3))
+    print("after deleting the root 4")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
+
+
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(1))
+    print("after deleting the root 5")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
+
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(1))
+    print("after deleting the root 6")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(1))
+    print("after deleting the root 7")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
+
+
+    print("\n")
+    print("\n")
+    print("\n")
+    print(t1.delete(0))
+    print("after deleting the root 8")
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.getRoot())
 
     
     
