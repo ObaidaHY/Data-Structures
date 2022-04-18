@@ -322,11 +322,11 @@ class AVLTreeList(object):
                 tmpParent = succ.getParent()
                 succ.setLeft(to_delete.getLeft())
                 succ.setRight(to_delete.getRight())
-                AVLNode.setParent(to_delete.getRight(),succ)
-                AVLNode.setParent(to_delete.getLeft(),succ)
                 succ.setHeight(to_delete.getHeight())
                 succ.setSize(to_delete.getSize())
                 succ.setParent(to_delete.getParent())
+                AVLNode.setParent(succ.getRight(),succ)
+                AVLNode.setParent(succ.getLeft(),succ)
             if is_root:
                 self.root = succ
                 
@@ -1131,15 +1131,18 @@ def insert_delete(i):
     count = 0
     for j in range(1000*(2**i)):
         ind = random.randint(0, t.length())
-        count  += t.insert(ind,'a')
-
+        t.insert(ind,'a')
+    for j in range(1000*(2**i)):
+        print(str(j))
+        ind = random.randint(0, t.length()-1)
+        count += t.delete(ind)
     return count
         
-'''
+
 for i in range(1,11):
     print("for i = : " + str(i))
     print("the count is : " + str(insert_delete(i)))
-    print("\n")'''
+    print("\n")
 
 
   
