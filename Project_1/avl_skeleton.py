@@ -317,16 +317,23 @@ class AVLTreeList(object):
                 AVLNode.setParent(succ,father)
                 tmpParent = succ
             else:
-                succ.getRight().setParent(succ.getParent())
-                succ.getParent().setLeft(succ.getRight())
                 tmpParent = succ.getParent()
+                succ.getRight().setParent(tmpParent)
+                tmpParent.setLeft(succ.getRight())
+                
                 succ.setLeft(to_delete.getLeft())
                 succ.setRight(to_delete.getRight())
-                succ.setHeight(to_delete.getHeight())
-                succ.setSize(to_delete.getSize())
-                succ.setParent(to_delete.getParent())
                 AVLNode.setParent(succ.getRight(),succ)
                 AVLNode.setParent(succ.getLeft(),succ)
+                
+                succ.setParent(father)
+                setter_father(succ)
+                
+                succ.setHeight(to_delete.getHeight())
+                succ.setSize(to_delete.getSize())
+                
+                
+                
             if is_root:
                 self.root = succ
                 
@@ -343,19 +350,18 @@ class AVLTreeList(object):
         yet = True
         while tmpParent:
             tmpParent.setSize(AVLNode.getSize(tmpParent.getLeft()) + AVLNode.getSize(tmpParent.getRight())+1)
-            if yet:
-                prev_height = tmpParent.getHeight()
-                tmpParent.setHeight(max(AVLNode.getHeight(tmpParent.getLeft()),AVLNode.getHeight(tmpParent.getRight()))+1)
-                changed = not (prev_height == tmpParent.getHeight())
-                if changed:
-                    count += 1
+            prev_height = tmpParent.getHeight()
+            tmpParent.setHeight(max(AVLNode.getHeight(tmpParent.getLeft()),AVLNode.getHeight(tmpParent.getRight()))+1)
+            changed = not (prev_height == tmpParent.getHeight())
+            if changed:
+                count += 1
             
-                bf = abs(tmpParent.BF()) 
+            bf = abs(tmpParent.BF()) 
 
-                if bf == 2:
-                    count += self.rotation(tmpParent)
-                    if changed:
-                        count -= 1
+            if bf == 2:
+                count += self.rotation(tmpParent)
+                if changed:
+                    count -= 1
             tmpParent = tmpParent.getParent()
 
         return count
@@ -534,12 +540,12 @@ class AVLTreeList(object):
             
             if rank > i:
                 node = node.getLeft()
-                rank = node.getLeft().getSize() + 1
+                #rank = node.getLeft().getSize() + 1
                 
             elif rank < i:
                 i = i - rank
                 node = node.getRight()
-                rank = node.getLeft().getSize() + 1
+            rank = node.getLeft().getSize() + 1
         
         return node
 
@@ -629,6 +635,7 @@ class AVLTreeList(object):
         else:
             AVLNode.setRight(father,son)
         AVLNode.setHeight(father,max(AVLNode.getHeight(AVLNode.getLeft(father)),AVLNode.getHeight(AVLNode.getRight(father)))+1)
+        AVLNode.setSize(father,AVLNode.getSize(AVLNode.getLeft(father))+AVLNode.getSize(AVLNode.getRight(father))+1)
         son.setSize(criminal.getSize())
         criminal.setSize(AVLNode.getSize(AVLNode.getLeft(criminal))+AVLNode.getSize(AVLNode.getRight(criminal))+1)
         if f_root:
@@ -918,6 +925,9 @@ def test():
     print("\n")
     print("\n")
     print("\n")'''
+
+
+    
     '''t = AVLTreeList()
     
     
@@ -1012,24 +1022,46 @@ def test():
     t1.insert(9,'h')
     t1.insert(2,'m')
     t1.insert(4,'p')
-    t1.delete(7)
+    #t1.delete(7)
     t1.insert(2,'s')
-    t1.delete(10)
+    #t1.delete(10)
+
+    #print2D(t1.root)
+    
 
 
-    t2=AVLTreeList()
+    '''t2=AVLTreeList()
     t2.insert(0,'x')
     t2.insert(0,'y')
     t2.insert(2,'z')
     t2.insert(2,'w')
-    t1.concat(t2)
-    
-    left,val,right = t1.split(8)
-
-    print2D(left.root)
+    t1.concat(t2)'''
 
     
+    
+    #left,val,right = t1.split(8)
 
+    print2D(t1.root)
+    print(t1.length())
+    print("\n")
+    print("\n")
+    print("\n")
+    print2D(t1.select(t1.root,5))
+    succ=t1.select(t1.root,6)
+    print("\n")
+    print("\n")
+    print("\n")
+    t1.delete(4)
+    print2D(t1.root)
+    print("\n")
+    print("\n")
+    print("\n")
+    print("hiiii im succ")
+    print2D(succ)
+    print(t1.length())
+
+    
+'''
     print("\n")
     print("\n")
     print("\n")
@@ -1113,7 +1145,7 @@ def test():
     print("\n")
     print("\n")
     print("\n")
-    print2D(t1.getRoot())
+    print2D(t1.getRoot())'''
 
     
     
@@ -1133,9 +1165,9 @@ def insert_delete(i):
         ind = random.randint(0, t.length())
         t.insert(ind,'a')
     for j in range(1000*(2**i)):
-        print(str(j))
         ind = random.randint(0, t.length()-1)
         count += t.delete(ind)
+        
     return count
         
 
