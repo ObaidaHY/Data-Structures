@@ -540,7 +540,6 @@ class AVLTreeList(object):
             
             if rank > i:
                 node = node.getLeft()
-                #rank = node.getLeft().getSize() + 1
                 
             elif rank < i:
                 i = i - rank
@@ -562,7 +561,7 @@ class AVLTreeList(object):
         if not node:
             return None 
         nxt = key(node)
-        while AVLNode.getHeight(nxt) != -1:
+        while AVLNode.isRealNode(nxt):
             node = nxt
             nxt = key(node)
         return node
@@ -578,7 +577,7 @@ class AVLTreeList(object):
 
     def successor(self,node):   #Time Complexity of O(logn)
         right = AVLNode.getRight(node)
-        if AVLNode.getHeight(right) != -1:
+        if AVLNode.isRealNode(right):
             return AVLTreeList.MinMax(self,right,lambda x : AVLNode.getLeft(x))
         y = node.getParent()
         while y and node == AVLNode.getRight(y):
@@ -596,7 +595,7 @@ class AVLTreeList(object):
     
     def predecessor(self,node): #Time Complexity of O(logn)
         left = AVLNode.getLeft(node)
-        if AVLNode.getHeight(left) != -1:
+        if AVLNode.isRealNode(left):
             return AVLTreeList.MinMax(self,left,lambda x : AVLNode.getRight(x))
         y = node.getParent()
         while y and node == AVLNode.getLeft(y):
@@ -730,6 +729,30 @@ class AVLTreeList(object):
        
         
 def test():
+    import random
+    t = AVLTreeList()
+    for i in range(200):
+        #ind = random.randint(0,t.length())
+        t.insert(t.length(),str(t.length()))
+    print2D(t.getRoot())
+    for i in range(200):
+        #ind = random.randint(0,t.length())
+        t.delete(t.length()-1)
+    print2D(t.getRoot())
+    print(t.search('199'))
+    
+    '''t=AVLTreeList()
+    t.insert(0,'a')
+    t.insert(1,'b')
+    t2= AVLTreeList()
+    t2.insert(0,'c')
+    t3= AVLTreeList()
+    max_= t._max
+    t.delete(1)
+    (x,y) = t.join(t.root,max_,t2.root)
+    t3.root = x
+    print(y)
+    print2D(t3.root)'''
     '''t = AVLTreeList()
     t.root = AVLNode(5)
     
@@ -999,7 +1022,7 @@ def test():
     print("t2 after concat")
     print2D(t2.root)'''
 
-    t1 = AVLTreeList()
+    
     '''t1.insert(0,'a')
     t1.insert(1,'b')
     t1.insert(0,'c')
@@ -1009,8 +1032,9 @@ def test():
     print2D(lst[0].root)
     print2D(lst[2].root)'''
 
+'''
+    t1 = AVLTreeList()
     t1.insert(0,'a')
-
     t1.insert(0,'b')
     t1.insert(2,'e')
     t1.insert(0,'c')
@@ -1030,12 +1054,12 @@ def test():
     
 
 
-    '''t2=AVLTreeList()
+    t2=AVLTreeList()
     t2.insert(0,'x')
     t2.insert(0,'y')
     t2.insert(2,'z')
     t2.insert(2,'w')
-    t1.concat(t2)'''
+    t1.concat(t2)
 
     
     
@@ -1059,7 +1083,7 @@ def test():
     print("hiiii im succ")
     print2D(succ)
     print(t1.length())
-
+'''
     
 '''
     print("\n")
@@ -1145,10 +1169,17 @@ def test():
     print("\n")
     print("\n")
     print("\n")
-    print2D(t1.getRoot())'''
+    print2D(t1.getRoot())
 
+
+    '''
     
-    
+
+
+
+
+
+
 
     
 
@@ -1161,25 +1192,27 @@ def insert_delete(i):
     
     t = AVLTreeList()
     count = 0
-    for j in range(1000*(2**i)):
+    for j in range(int(1000*(2**int(i-1)))):
         ind = random.randint(0, t.length())
         t.insert(ind,'a')
-    for j in range(1000*(2**i)):
+    for j in range(int(1000*(2**(i-2)))):
+        ind = random.randint(0, t.length())
+        count += t.insert(ind,'a')
         ind = random.randint(0, t.length()-1)
         count += t.delete(ind)
         
     return count
         
 
-for i in range(1,11):
+'''for i in range(1,11):
     print("for i = : " + str(i))
     print("the count is : " + str(insert_delete(i)))
-    print("\n")
+    print("\n")'''
 
 
   
     
-COUNT = [10]    
+COUNT = [4]    
 def print2DUtil(root, space) :
  
     # Base case
