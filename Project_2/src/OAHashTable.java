@@ -2,27 +2,54 @@
 public abstract class OAHashTable implements IHashTable {
 	
 	private HashTableElement [] table;
+	private HashTableElement deleted = new HashTableElement(-1,-1);
 	
 	public OAHashTable(int m) {
 		this.table = new HashTableElement[m];
-		// TODO add to constructor as needed
 	}
 	
 	
 	@Override
 	public HashTableElement Find(long key) {
-		// TODO implement find
+		for(int i = 0; i < table.length; i++) {
+			int hashcode = Hash(key,i);
+			HashTableElement cur = table[hashcode];
+			if(cur == null) {break;}
+			if (cur.GetKey() == key) {return table[hashcode];}
+		}
 		return null;
 	}
 	
 	@Override
 	public void Insert(HashTableElement hte) throws TableIsFullException,KeyAlreadyExistsException {
-		// TODO implement insertion	
+		if (Find(hte.GetKey()) == null) {
+			for(int i = 0; i < table.length; i++) {
+				int hashcode = Hash(hte.GetKey(),i);
+				HashTableElement cur = table[hashcode];
+				if (cur == null || cur.GetKey() < 0) {
+					table[hashcode] = hte;
+					return;
+				}
+			}
+			throw new TableIsFullException(hte);
+		}
+		else {
+			throw new KeyAlreadyExistsException(hte);
+		}
 	}
 	
 	@Override
 	public void Delete(long key) throws KeyDoesntExistException {
-		// TODO implement deletion
+		for(int i = 0; i < table.length; i++) {
+			int hashcode = Hash(key,i);
+			HashTableElement cur = table[hashcode];
+			if (cur == null) {break;}
+			if(cur.GetKey() == key) {
+				table[hashcode] = deleted;
+				return;
+			}
+		}
+		throw new KeyDoesntExistException(key);
 	}
 	
 	/**

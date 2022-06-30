@@ -1,13 +1,24 @@
 
+
 public class ModHash {
 	
+	long a;
+	long b;
+	int m;
+	long p;
+	
 	public static ModHash GetFunc(int m, long p){
-		// TODO implement random choice of mod function from family
-		return null;
+		return new ModHash(m , p,(long)(Math.random()*(p-1))+1,(long)(Math.random()*(p)));
 	}
 	
-	public int Hash(long key) {
-		// TODO implement hash function
-		return 0;
+	public ModHash(int m, long p ,long a, long b) {
+		this.m = m;
+		this.p = p;
+		this.a = a;
+		this.b = b;
+	}
+	
+	public int Hash(long key) {	
+		return (int) (((((long)(a*key+b))%p)%m)+m)%m;
 	}
 }
