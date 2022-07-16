@@ -9,7 +9,7 @@ Note : project 1 is implemented with Python.
 
 
 # project #2 : HashTables
-Implementing Hash Tables with OpenAddressing using 4 different probing methods : 
+Implementing Hash Tables with OpenAddressing (for dealing with collisions) using 4 different probing methods : 
 Linear Probing, Quadratic Probing, Alternate Quadratic Probing, Double Hash Probing.
 we're interested in comparing the performance of these different probing methods in terms of time efficiency,
 and we got to really interesting results.
