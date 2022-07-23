@@ -17,4 +17,11 @@ and we got to really interesting results.
 Note : project 2 is implemented with Java.
 
 
-# project #3 coming soon!!
+# project #3 : Maze Generator
+"Union-Find , the data structure that left a deep impression on me."
+Generating random maze using Disjoint-set (Union-Find) and randomly uniting nodes. 
+A Disjoint set is represented by 2 nested lists , and each node is represented by (i,j) where i,j are the indecies of row,column (respectively) of the node in the nested list
+the project was created after finishing Data-Structures course at Tel-Aviv University, duo to the impression Union-Find left on me.
+References :
+* an Idea in the slides of Union-Find presentation, Data-Structures course
+* 
