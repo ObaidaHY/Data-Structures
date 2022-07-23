@@ -182,7 +182,7 @@ class Maze(object):
                 #i,j = random.randint(0,numRows-1),random.randint(0,numCols-1)
                 a,b = Maze.randEdge(edge[0],edge[1],numRows,numCols)
                 
-                if maze.find(edge) != maze.Find(a,b):
+                if Disjoint.find(maze,edge) != Disjoint.Find(maze,a,b):
                     maze.Union(edge[0],edge[1],a,b)
                 edge = (a,b)
 
