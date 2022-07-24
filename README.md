@@ -24,6 +24,6 @@ A Disjoint set is represented by 2 nested lists , and each node is represented b
 the project was created after finishing Data-Structures course at Tel-Aviv University, duo to the impression Union-Find left on me. 
 References :
 * an Idea in the slides of Union-Find presentation, Data-Structures course
-* betterprogramming.pub/using-disjoint-set-union-find-to-build-a-maze-generator-7462ea3b8632
+* [Using Disjoint-Set (Union-Find) to Build a Maze Generator](betterprogramming.pub/using-disjoint-set-union-find-to-build-a-maze-generator-7462ea3b8632)
 
 Note : project 3 is implemented with Python.
