@@ -1,7 +1,7 @@
 # Advanced Data-Structures
 
 # project #1 : AVLTreeList 
-Implementing the ADT List with balanced Binary Trees , specifically AVL binary Trees.<br />
+Implementing the ADT List with Balanced Binary Trees , specifically AVL binary Trees.<br />
 we're interested in making some functions operate with run time complexity of O(logn) WC , <br />
 and as anticipated the run time complexity of other functions would be affected (kind of a trade-off)
 
